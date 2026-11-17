@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0d0d17" />
+  <meta name="description" content="Мистер Кивив и Поколоко — наш маленький онлайн-кинотеатр для двоих: смотрим синхронно, общаемся, выбираем фильмы вместе." />
+  <title>Мистер Кивив и Поколоко — наш кинозал ♡</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <div class="ambient ambient-one"></div>
+  <div class="ambient ambient-two"></div>
+  <div class="app-shell">
+    <header class="site-header">
+      <a href="/" class="brand" aria-label="Создать новый кинозал">
+        <span class="brand-icon" aria-hidden="true">✦</span>
+        <span class="brand-copy"><strong>Мистер Кивив <span>&</span> Поколоко</strong><small>наш маленький мир кино</small></span>
+      </a>
+      <div class="header-actions">
+        <span id="statusPill" class="status-pill"><span class="status-dot"></span><span id="statusText">Подключаемся…</span></span>
+        <button id="inviteBtn" class="button button-primary" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          <span>Пригласить</span>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="tiny-star">✳</span> КИНОЗАЛ ТОЛЬКО ДЛЯ НАС ДВОИХ</p>
+          <h1>Сегодня весь мир <span>подождёт.</span></h1>
+          <p class="hero-description">Выбираем фильм, нажимаем play и оказываемся рядом. Даже если между нами километры. <span>♡</span></p>
+        </div>
+        <div class="hero-meta">
+          <div class="members-row">
+            <div class="member-avatar member-k">К</div><div class="member-avatar member-p">П</div>
+            <div><strong id="memberCount">Пока только ты</strong><small id="memberHint">Пригласи свою половинку</small></div>
+          </div>
+          <div class="room-label"><span class="room-label-dot"></span> ВАША КОМНАТА <span id="roomCode">········</span></div>
+        </div>
+      </section>
+
+      <div class="main-layout">
+        <div class="theater-column">
+          <section class="theater-card" aria-label="Совместный видеоплеер">
+            <div class="theater-head"><span class="theater-live"><span class="theater-live-dot"></span> НАШ ЭКРАН</span><span id="theaterBadge" class="theater-badge">Ждём выбор фильма</span></div>
+            <div class="screen" id="screen">
+              <div id="emptyScreen" class="empty-screen">
+                <div class="screen-shine"></div>
+                <div class="screen-spark screen-spark-a">✧</div>
+                <div class="screen-spark screen-spark-b">✧</div>
+                <div class="screen-spark screen-spark-c">✦</div>
+                <div class="popcorn-art" aria-hidden="true">🍿</div>
+                <p class="empty-overline">НАШ ВЕЧЕР НАЧИНАЕТСЯ ЗДЕСЬ</p>
+                <h2>Ну что, включим кино?</h2>
+                <p>Выбери фильм снизу или добавь свой по ссылке</p>
+                <button id="emptyChooseBtn" class="button button-light" type="button">Выбрать фильм <span aria-hidden="true">↗</span></button>
+              </div>
+              <video id="nativePlayer" class="media-player hidden" playsinline preload="metadata"></video>
+              <div id="youtubeLayer" class="media-player hidden"><div id="youtubeHolder"></div></div>
+              <div id="startOverlay" class="start-overlay hidden">
+                <span>🎬</span>
+                <strong>Фильм уже идёт!</strong>
+                <p>Нажми, чтобы запустить видео у себя</p>
+                <button id="startOverlayBtn" class="button button-primary" type="button">▶ Включить просмотр</button>
+              </div>
+              <div id="movieTitleOverlay" class="movie-title-overlay hidden"><span class="movie-spot"></span><span id="onScreenTitle"></span></div>
+            </div>
+            <div class="control-area">
+              <div class="timeline-row">
+                <span id="currentTime" class="timecode">00:00</span>
+                <input id="seekSlider" type="range" min="0" max="1000" value="0" step="1" aria-label="Перемотать фильм" disabled />
+                <span id="durationTime" class="timecode">00:00</span>
+              </div>
+              <div class="controls-row">
+                <div class="control-left">
+                  <button id="playBtn" class="play-button" title="Воспроизвести" aria-label="Воспроизвести" disabled>
+                    <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m8 5 11 7-11 7V5Z"/></svg>
+                  </button>
+                  <div class="track-details"><strong id="trackTitle">Фильм пока не выбран</strong><small id="trackSub">Выбери что-нибудь особенное ✨</small></div>
+                </div>
+                <div class="control-right">
+                  <span id="syncLabel" class="sync-label"><span class="sync-flower">✳</span> Один экран, два сердца</span>
+                  <div class="volume-wrap"><span aria-hidden="true">♫</span><input id="volumeSlider" aria-label="Громкость только у тебя" type="range" min="0" max="100" value="70" /></div>
+                  <button id="fullscreenBtn" class="icon-button" type="button" aria-label="На весь экран" title="На весь экран">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3m13-5h3a2 2 0 0 1 2 2v3M3 16v3a2 2 0 0 0 2 2h3m13-5v3a2 2 0 0 1-2 2h-3"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="library" class="library-section">
+            <div class="section-heading"><div><span class="section-eyebrow">ДЛЯ НАШЕГО ВЕЧЕРА</span><h2>Выберем что-нибудь? <span>✧</span></h2></div><button id="addMovieBtn" class="button button-outline" type="button"><span class="plus-mark">＋</span> Добавить фильм</button></div>
+            <div class="movie-grid" id="movieGrid">
+              <button class="movie-card" data-film="bunny" type="button">
+                <span class="poster poster-bunny"><span class="poster-deco">✦</span><span class="poster-emoji">🐰</span><span class="poster-tag">Мультфильм</span></span>
+                <span class="movie-card-info"><strong>Big Buck Bunny</strong><small>Весёлый короткий метр</small></span>
+              </button>
+              <button class="movie-card" data-film="sintel" type="button">
+                <span class="poster poster-sintel"><span class="poster-deco">✧</span><span class="poster-emoji">🐉</span><span class="poster-tag">Фэнтези</span></span>
+                <span class="movie-card-info"><strong>Sintel</strong><small>Приключение и магия</small></span>
+              </button>
+              <button class="movie-card" data-film="elephants" type="button">
+                <span class="poster poster-elephants"><span class="poster-deco">✺</span><span class="poster-emoji">🌙</span><span class="poster-tag">Анимация</span></span>
+                <span class="movie-card-info"><strong>Elephants Dream</strong><small>Необычный мир</small></span>
+              </button>
+              <button class="movie-card" data-film="steel" type="button">
+                <span class="poster poster-steel"><span class="poster-deco">✷</span><span class="poster-emoji">🚀</span><span class="poster-tag">Фантастика</span></span>
+                <span class="movie-card-info"><strong>Tears of Steel</strong><small>Фильм о будущем</small></span>
+              </button>
+            </div>
+            <p class="library-footnote">✧ Это открытые демонстрационные фильмы. Можно добавить любое доступное видео по прямой ссылке или ролик YouTube.</p>
+          </section>
+        </div>
+
+        <aside class="chat-card" aria-label="Наш чат">
+          <div class="chat-header">
+            <div class="chat-symbol">♡</div>
+            <div class="chat-heading"><h2>Наш чатик</h2><p>Здесь только мы и наши эмоции</p></div>
+            <button id="renameBtn" class="icon-button chat-settings" type="button" aria-label="Изменить своё имя" title="Изменить своё имя">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L9 17l-4 1 1-4Z"/></svg>
+            </button>
+          </div>
+          <div class="chat-inner">
+            <div class="chat-daylabel"><span>✦</span> НАША КИНОИСТОРИЯ <span>✦</span></div>
+            <div id="messages" class="messages" role="log" aria-live="polite" aria-relevant="additions"></div>
+          </div>
+          <div class="chat-footer">
+            <div class="reactions-row"><span>Быстрые эмоции:</span><button class="reaction" data-reaction="❤️" type="button" aria-label="Отправить сердце">❤️</button><button class="reaction" data-reaction="🍿" type="button" aria-label="Отправить попкорн">🍿</button><button class="reaction" data-reaction="😂" type="button" aria-label="Отправить смех">😂</button><button class="reaction" data-reaction="🥹" type="button" aria-label="Отправить умиление">🥹</button><button class="reaction" data-reaction="😘" type="button" aria-label="Отправить поцелуй">😘</button></div>
+            <form id="chatForm" class="chat-compose"><input id="chatInput" type="text" maxlength="500" placeholder="Напиши что-нибудь милое…" autocomplete="off" aria-label="Сообщение" /><button id="sendBtn" class="send-button" type="submit" aria-label="Отправить сообщение"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg></button></form>
+            <p id="chatFooterHint" class="chat-footer-hint"><span class="mini-heart">♥</span> Слова между нами остаются в этой комнате</p>
+          </div>
+        </aside>
+      </div>
+      <footer class="site-footer"><span>С любовью, специально для <strong>Мистера Кивив и Поколоко</strong> ♡</span><span>Вечер начинается с кнопки play.</span></footer>
+    </main>
+  </div>
+
+  <dialog id="movieDialog" class="app-dialog">
+    <form id="movieForm" class="dialog-panel" method="dialog">
+      <button class="dialog-close" type="button" data-close-dialog="movieDialog" aria-label="Закрыть">×</button>
+      <div class="dialog-icon">🎞️</div>
+      <h2>Добавим что-то своё?</h2>
+      <p>Вставь ссылку на открытый ролик YouTube или прямую ссылку на видеоформат MP4, WebM или OGG.</p>
+      <label for="movieTitleInput">Название фильма</label>
+      <input id="movieTitleInput" name="title" maxlength="100" placeholder="Например: Наш любимый фильм" required />
+      <label for="movieUrlInput">Ссылка на видео</label>
+      <input id="movieUrlInput" name="url" type="url" placeholder="https://youtu.be/... или https://.../film.mp4" required />
+      <p id="movieError" class="field-error hidden"></p>
+      <button class="button button-primary dialog-submit" type="submit">Поставить в наш кинозал <span>→</span></button>
+      <small>Платные стриминги (Netflix и подобные) обычно не разрешают такое встраивание.</small>
+    </form>
+  </dialog>
+  <dialog id="nameDialog" class="app-dialog">
+    <form id="nameForm" class="dialog-panel dialog-name" method="dialog">
+      <button class="dialog-close" type="button" data-close-dialog="nameDialog" aria-label="Закрыть">×</button>
+      <div class="dialog-icon">💌</div>
+      <h2>Как тебя называть?</h2>
+      <p>Имена видны только вам двоим в этом кинозале.</p>
+      <label for="nameInput">Твоё имя</label>
+      <input id="nameInput" name="name" maxlength="24" required />
+      <button class="button button-primary dialog-submit" type="submit">Сохранить имя <span>♡</span></button>
+    </form>
+  </dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/app.js" defer></script>
+</body>
+</html>
